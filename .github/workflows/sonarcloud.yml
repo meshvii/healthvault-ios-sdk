@@ -1,11 +1,10 @@
-name: SonarCloud
+name: Xcode - Build and Analyze
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -13,17 +12,19 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Install build-wrapper
+      - name: Install CocoaPods
+        run: pod install
+        working-directory: Example
+
+      - name: Download build-wrapper
         run: |
           curl -sSLo build-wrapper.zip https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
           unzip build-wrapper.zip -d build-wrapper
 
-      - name: Run build-wrapper with Xcode
+      - name: Build with build-wrapper
         run: |
           ./build-wrapper/build-wrapper-macosx-x86 --out-dir bw-output \
           xcodebuild -workspace Example/healthvault-ios-sdk.xcworkspace \
@@ -31,7 +32,7 @@ jobs:
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 14'
 
-      - name: Run SonarCloud Scan
+      - name: Run SonarCloud analysis
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
