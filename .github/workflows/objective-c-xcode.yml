@@ -36,6 +36,13 @@ jobs:
           echo "Available schemes:"
           xcodebuild -workspace Example/healthvault-ios-sdk.xcworkspace -list
 
+      - name: Select simulator
+        run: |
+          sudo xcode-select -s /Applications/Xcode_14.1.app/Contents/Developer
+          xcrun simctl shutdown all
+          xcrun simctl erase all
+          xcrun simctl boot 'iPhone 14' || xcrun simctl boot 'iPhone 14' || true
+
       - name: Build and Analyze project
         run: |
           xcodebuild clean build analyze \
