@@ -1,4 +1,4 @@
-name: SonarCloud Scan (No Build)
+name: SonarCloud
 
 on:
   push:
@@ -8,18 +8,29 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  analyze:
-    name: Analyze Code (Objective-C)
+  build:
+    name: Build and analyze on SonarCloud
     runs-on: macos-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Install build-wrapper
+        run: |
+          curl -sSLo build-wrapper.zip https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
+          unzip build-wrapper.zip -d build-wrapper
+
+      - name: Run build-wrapper
+        run: |
+          ./build-wrapper/build-wrapper-macosx-x86 --out-dir bw-output \
+          xcodebuild -workspace Example/healthvault-ios-sdk.xcworkspace \
+          -scheme healthvault-ios-sdk-Example \
+          -sdk iphonesimulator \
+          -destination 'platform=iOS Simulator,name=iPhone 14'
+
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
@@ -28,6 +39,4 @@ jobs:
             -Dsonar.organization=meshvii
             -Dsonar.sources=HealthVault
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.c.file.suffixes=.c,.h
-            -Dsonar.objc.file.suffixes=.m,.h
+            -Dsonar.cfamily.build-wrapper-output=bw-output
