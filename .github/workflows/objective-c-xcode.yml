@@ -15,9 +15,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install CocoaPods dependencies
+      - name: Install CocoaPods
         run: |
+          sudo gem install cocoapods
+
+      - name: Install Dependencies
+        run: |
+          cd Example
           pod install
+          if [ ! -f "Pods/Pods.xcodeproj" ]; then
+            echo "Pods.xcodeproj does not exist after pod install"
+            exit 1
+          fi
 
       - name: Set Default Scheme
         run: |
