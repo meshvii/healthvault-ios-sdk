@@ -1,41 +1,53 @@
-name: Xcode - Build and Analyze
+name: SonarCloud Analysis
 
 on:
   push:
-    branches: [ "microsoft/develop" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "microsoft/develop" ]
+    branches: [ "main" ]
 
 jobs:
   build:
-    name: Build and analyse default scheme using xcodebuild command
+    name: Build and analyze on SonarCloud
     runs-on: macos-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Install CocoaPods
+        with:
+          fetch-depth: 0  # Important for Sonar to see full history
+
+      - name: Set up Ruby (required for CocoaPods)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'  # You can adjust this based on your local dev version
+
+      - name: Install CocoaPods dependencies
+        run: pod install
+        working-directory: Example
+
+      - name: Download SonarCloud build-wrapper
         run: |
-          sudo gem install cocoapods
-          
-      - name: Install Dependencies
+          curl -sSLo build-wrapper.zip https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
+          unzip build-wrapper.zip -d build-wrapper
+
+      - name: Run Xcode build using build-wrapper
         run: |
-          cd Example
-          pod install
-      
-      - name: Set Default Scheme
-        run: |
-          scheme_list=$(xcodebuild -list -json | tr -d "\n")
-          default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-          echo $default | cat >default
-          echo Using default scheme: $default
-          
-      - name: Build
+          ./build-wrapper/build-wrapper-macosx-x86 --out-dir bw-output \
+          xcodebuild -workspace Example/healthvault-ios-sdk.xcworkspace \
+          -scheme healthvault-ios-sdk-Example \
+          -sdk iphonesimulator \
+          -destination 'platform=iOS Simulator,name=iPhone 14'
+
+      - name: Run SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
-          scheme: ${{ 'default' }}
-        run: |
-          if [ $scheme = default ]; then scheme=$(cat default); fi
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build=`ls -A | grep -i \\.xcodeproj\$`; fi
-          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" | xcpretty && exit ${PIPESTATUS[0]}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=meshvii_healthvault-ios-sdk
+            -Dsonar.organization=meshvii
+            -Dsonar.sources=HealthVault
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.cfamily.build-wrapper-output=bw-output
+            -Dsonar.sourceEncoding=UTF-8

@@ -693,7 +693,6 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				211869A455E8B6611E81595C /* [CP] Embed Pods Frameworks */,
-				D20BEA24CDB382AA4D9103E7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -713,7 +712,6 @@
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
 				8075D4D89F78DC0756A84A20 /* [CP] Embed Pods Frameworks */,
-				5BB528A57811C7B45356E951 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -831,7 +829,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-healthvault-ios-sdk_Example/Pods-healthvault-ios-sdk_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-healthvault-ios-sdk_Example/Pods-healthvault-ios-sdk_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/EncryptedCoreData/EncryptedCoreData.framework",
 				"${BUILT_PRODUCTS_DIR}/HealthVault/HealthVault.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
@@ -844,7 +842,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-healthvault-ios-sdk_Example/Pods-healthvault-ios-sdk_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-healthvault-ios-sdk_Example/Pods-healthvault-ios-sdk_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		2BF26383F62563B7F5E23455 /* [CP] Check Pods Manifest.lock */ = {
@@ -865,28 +863,13 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5BB528A57811C7B45356E951 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-healthvault-ios-sdk_Tests/Pods-healthvault-ios-sdk_Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		8075D4D89F78DC0756A84A20 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-healthvault-ios-sdk_Tests/Pods-healthvault-ios-sdk_Tests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-healthvault-ios-sdk_Tests/Pods-healthvault-ios-sdk_Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/EncryptedCoreData/EncryptedCoreData.framework",
 				"${BUILT_PRODUCTS_DIR}/HealthVault-Tests/HealthVault.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
@@ -901,22 +884,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-healthvault-ios-sdk_Tests/Pods-healthvault-ios-sdk_Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D20BEA24CDB382AA4D9103E7 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-healthvault-ios-sdk_Example/Pods-healthvault-ios-sdk_Example-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-healthvault-ios-sdk_Tests/Pods-healthvault-ios-sdk_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
